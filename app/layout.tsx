@@ -1,4 +1,5 @@
 import "../styles/globals.css";
+
 import React from "react";
 import type { Metadata } from "next";
 import { Inter, Space_Grotesk } from "next/font/google";
