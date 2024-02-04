@@ -1,10 +1,11 @@
-import "../styles/globals.css";
-
-import React from "react";
 import type { Metadata } from "next";
+// eslint-disable-next-line camelcase
 import { Inter, Space_Grotesk } from "next/font/google";
+import { ReactNode } from "react";
 import { ClerkProvider } from "@clerk/nextjs";
-import {ThemeProvider} from "@/context/ThemeProvider";
+import { ThemeProvider } from "@/context/ThemeProvider";
+
+import "../styles/globals.css";
 
 const inter = Inter({
     subsets: ["latin"],
@@ -15,19 +16,19 @@ const inter = Inter({
 const spaceGrotesk = Space_Grotesk({
     subsets: ["latin"],
     weight: ["300", "400", "500", "600", "700"],
-    variable: "--font-inter",
+    variable: "--font-spaceGrotesk",
 });
 
 export const metadata: Metadata = {
-    title: "DevOverflow",
+    title: "Dev Overflow",
     description:
-        "A community-driven plartform for asking and answering programming questions get help, share knowledge, and collaborate with developers from aroud the world. Explore topics in web development, mobile app development, algorithms, data structures, and more.",
+        "A community-driven platform for asking and answering programming questions. Get help, share knowledge and collaborate with developers from around the world. Explore topics in web developments, mobile app development, algorithms, data structures and more...",
     icons: {
-        icon: "/assets/images/site-logo-svg",
+        icon: "/assets/images/logo.png",
     },
 };
 
-export default function RootLayout({ children,}: { children: React.ReactNode }) {
+export default function RootLayout({ children }: { children: ReactNode }) {
     return (
         <html lang="en">
         <body className={`${inter.variable} ${spaceGrotesk.variable}`}>

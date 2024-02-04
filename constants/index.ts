@@ -71,3 +71,10 @@ export const BADGE_CRITERIA = {
         GOLD: 100000,
     },
 };
+
+export const THEME_STORAGE_KEY = "theme";
+export const GLOBAL_SEARCH_PARAMS_KEY = "global";
+export const SEARCH_TYPE_PARAMS_KEY = "type";
+export const QUERY_SEARCH_PARAMS_KEY = "q";
+export const FILTER_SEARCH_PARAMS_KEY = "filter";
+export const PAGE_NUMBER_SEARCH_PARAMS_KEY = "page";
