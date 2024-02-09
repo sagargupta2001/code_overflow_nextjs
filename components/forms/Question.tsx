@@ -23,7 +23,7 @@ import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { createQuestion, editQuestion } from "@/lib/actions/question.action";
 import { toast } from "../ui/use-toast";
-import {QuestionSchema} from "@/lib/validation";
+import {QuestionSchema} from "@/lib/validations";
 
 interface Props {
     type?: "Edit";
