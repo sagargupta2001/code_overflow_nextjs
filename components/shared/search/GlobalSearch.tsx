@@ -1,16 +1,11 @@
-"use client";
+'use client';
 
-import Image from "next/image";
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Input } from "@/components/ui/input";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { formUrlQuery, removeKeysFromQuery } from "@/lib/utils";
-
-import {
-    GLOBAL_SEARCH_PARAMS_KEY,
-    QUERY_SEARCH_PARAMS_KEY,
-    SEARCH_TYPE_PARAMS_KEY,
-} from "@/constants";
+import { Input } from '@/components/ui/input';
+import { formUrlQuery, removeKeysFromQuery } from '@/lib/utils';
+import Image from 'next/image';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useRef, useState } from 'react';
+import GlobarResult from "@/components/shared/search/GlobalResult";
 
 const GlobalSearch = () => {
     const router = useRouter();
@@ -18,82 +13,86 @@ const GlobalSearch = () => {
     const searchParams = useSearchParams();
     const searchContainerRef = useRef(null);
 
-    const query = searchParams.get(QUERY_SEARCH_PARAMS_KEY);
+    const query = searchParams.get('global');
 
-    const [search, setSearch] = useState(query ?? "");
-    const [isOpen, setIsOpen] = useState(false);
+    const [search, setSearch] = useState(query || '');
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
-    const closeResults = useCallback(() => {
-        setIsOpen(false);
-        setSearch("");
-    }, []);
-
+    // close modal useEffect
     useEffect(() => {
-        const handleOutsideClick = (event: any) => {
+        const handleOutsideClick = (e: any) => {
             if (
                 searchContainerRef.current &&
                 // @ts-ignore
-                !searchContainerRef.current.contains(event.target)
+                !searchContainerRef.current.contains(e.target)
             ) {
-                closeResults();
+                setIsModalOpen(false);
+                setSearch('');
             }
         };
-        setIsOpen(false);
-        document.addEventListener("click", handleOutsideClick);
-        return () => {
-            document.removeEventListener("click", handleOutsideClick);
-        };
-    }, [closeResults, pathname]);
+
+        setIsModalOpen(false);
+
+        document.addEventListener('click', handleOutsideClick);
+
+        return () => document.removeEventListener('click', handleOutsideClick);
+    }, [pathname]);
 
     useEffect(() => {
         const delayDebounceFn = setTimeout(() => {
             if (search) {
                 const newUrl = formUrlQuery({
                     params: searchParams.toString(),
-                    key: GLOBAL_SEARCH_PARAMS_KEY,
-                    value: search,
+                    key: 'global',
+                    value: search
                 });
                 router.push(newUrl, { scroll: false });
             } else {
                 if (query) {
                     const newUrl = removeKeysFromQuery({
                         params: searchParams.toString(),
-                        keysToRemove: [GLOBAL_SEARCH_PARAMS_KEY, SEARCH_TYPE_PARAMS_KEY],
+                        keysToRemove: ['global', 'type']
                     });
+
                     router.push(newUrl, { scroll: false });
                 }
             }
         }, 300);
+
         return () => clearTimeout(delayDebounceFn);
-    }, [search, router, pathname, searchParams, query]);
+    }, [query, search, router, pathname, searchParams]);
 
     return (
         <div
             className="relative w-full max-w-[600px] max-lg:hidden"
-            ref={searchContainerRef}>
-            <div className="background-light800_darkgradient relative flex min-h-[56px] grow items-center gap-1 rounded-xl px-4">
+            ref={searchContainerRef}
+        >
+            <div className="background-light800_darkgradient relative flex min-h-[50px] grow items-center gap-1 rounded-xl px-4">
                 <Image
                     src="/assets/icons/search.svg"
                     alt="search"
-                    width={24}
                     height={24}
+                    width={24}
                     className="cursor-pointer"
                 />
                 <Input
                     type="text"
-                    placeholder="Search globally"
                     value={search}
                     onChange={(e) => {
                         setSearch(e.target.value);
-                        if (!isOpen) setIsOpen(true);
-                        if (e.target.value === "" && isOpen) setIsOpen(false);
+                        if (!isModalOpen) {
+                            setIsModalOpen(true);
+                        }
+                        if (e.target.value === '' && isModalOpen) {
+                            setIsModalOpen(false);
+                        }
                     }}
-                    className="paragraph-regular no-focus placeholder text-dark400_light700 border-none bg-transparent shadow-none outline-none"
+                    placeholder="Search globally"
+                    className="paragraph-regular text-dark400_light700 no-focus placeholder border-none bg-transparent shadow-none outline-none"
                 />
             </div>
-
+            {isModalOpen && <GlobarResult />}
         </div>
     );
 };
-
 export default GlobalSearch;
